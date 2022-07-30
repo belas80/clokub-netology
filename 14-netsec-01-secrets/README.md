@@ -185,3 +185,84 @@ NAME                  TYPE                                  DATA   AGE
 default-token-slvpk   kubernetes.io/service-account-token   3      35d
 domain-cert           kubernetes.io/tls                     2      5s
 ```
+
+## Задача 2 (*): Работа с секретами внутри модуля  
+
+Выберите любимый образ контейнера, подключите секреты и проверьте их доступность
+как в виде переменных окружения, так и в виде примонтированного тома.  
+
+Создадим еще один секрет с парой имя и пароль:  
+```shell
+% kubectl create secret generic mysecret --from-literal MYNAME=admin --from-literal MYPASSWORD=MyVeryStrongPass
+secret/mysecret created
+
+% kubectl get secrets mysecret -o yaml                                                                         
+apiVersion: v1
+data:
+  MYNAME: YWRtaW4=
+  MYPASSWORD: TXlWZXJ5U3Ryb25nUGFzcw==
+kind: Secret
+metadata:
+  creationTimestamp: "2022-07-30T19:57:01Z"
+  name: mysecret
+  namespace: stage
+  resourceVersion: "218611"
+  uid: ec934b71-5bad-4385-898d-944dcf2b84c4
+type: Opaque
+```
+
+Создадим манифест [pod-with-secrets.yml](src/pod-with-secrets.yml) для пода, где подключим только что созданный секрет в виде переменной окружения, а секрет из предыдущего задания в виде примонтированного тома.  
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+      protocol: TCP
+    - containerPort: 443
+      protocol: TCP
+    volumeMounts:
+    - name: certs
+      mountPath: "/etc/nginx/ssl"
+      readOnly: true
+    envFrom:
+    - secretRef:
+        name: mysecret
+  volumes:
+  - name: certs
+    secret:
+      secretName: domain-cert
+```
+Проверяем.  
+```shell
+# Создаем pod
+% kubectl apply -f src/pod-with-secrets.yml 
+pod/my-pod created
+
+# Проверим что создался
+% kubectl get po
+NAME     READY   STATUS    RESTARTS   AGE
+my-pod   1/1     Running   0          24s
+
+# Проверим наличие примонтированной папки ssl и ее содержимое 
+ % kubectl exec po/my-pod -- ls /etc/nginx/ssl
+tls.crt
+tls.key
+% kubectl exec po/my-pod -- cat /etc/nginx/ssl/tls.crt
+-----BEGIN CERTIFICATE-----
+MIIFPDCCAyQCCQDR0Mfo+30SyTANBgkqhkiG9w0BAQsFADBgMQswCQYDVQQGEwJS
+...
+...
+VffjJHp4qhQZYUk3l8laSK2L0i8NlBV48kxmc1byXSwfuyw4KlqgaFL3KIKmCfFg
+-----END CERTIFICATE-----
+
+# Проверим переменные окружения
+% kubectl exec po/my-pod -- env | grep MY    
+MYPASSWORD=MyVeryStrongPass
+MYNAME=admin
+```

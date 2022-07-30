@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secret-env-pod
+spec:
+  containers:
+  - name: busybox
+    image: k8s.gcr.io/busybox
+    command: [ "/bin/sh", "-c", "env"]
+    env:
+      - name: SECRET_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: mysecret
+            key: MYNAME
+            optional: false
+      - name: SECRET_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: mysecret
+            key: MYPASSWORD
+            optional: false
+  restartPolicy: Never
