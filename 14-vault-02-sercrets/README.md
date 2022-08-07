@@ -110,14 +110,26 @@ sh-5.1#
 Запустить интепретатор Python и выполнить следующий код, предварительно
 поменяв IP и токен
 
-```shell
+```
 import hvac
 client = hvac.Client(
-    url='http://10.233.90.99:8200',
+    url='http://10.10.133.71:8200',
     token='aiphohTaa0eeHei'
 )
 client.is_authenticated()
 
+# Пишем секрет
+client.secrets.kv.v2.create_or_update_secret(
+    path='hvac',
+    secret=dict(netology='Big secret!!!'),
+)
+
+# Читаем секрет
+client.secrets.kv.v2.read_secret_version(
+    path='hvac',
+)
+```
+```shell
 # Вывод из CLI
 sh-5.1# python3
 Python 3.10.4 (main, Mar 25 2022, 00:00:00) [GCC 12.0.1 20220308 (Red Hat 12.0.1-0)] on linux
@@ -130,27 +142,12 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> client.is_authenticated()
 True
 >>> 
-
-# Пишем секрет
-client.secrets.kv.v2.create_or_update_secret(
-    path='hvac',
-    secret=dict(netology='Big secret!!!'),
-)
-
-# Вывод из CLI
 >>> client.secrets.kv.v2.create_or_update_secret(
 ...     path='hvac',
 ...     secret=dict(netology='Big secret!!!'),
 ... )
 {'request_id': '79b4298b-59e3-3b9d-fadf-dd47f8b10e0c', 'lease_id': '', 'renewable': False, 'lease_duration': 0, 'data': {'created_time': '2022-08-07T20:17:11.086449435Z', 'custom_metadata': None, 'deletion_time': '', 'destroyed': False, 'version': 1}, 'wrap_info': None, 'warnings': None, 'auth': None}
 >>> 
-
-# Читаем секрет
-client.secrets.kv.v2.read_secret_version(
-    path='hvac',
-)
-
-# Вывод из CLI
 >>> client.secrets.kv.v2.read_secret_version(
 ...     path='hvac',
 ... )
