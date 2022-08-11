@@ -1,10 +1,14 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  creationTimestamp: "2022-08-11T17:15:13Z"
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"ServiceAccount","metadata":{"annotations":{},"creationTimestamp":"2022-08-11T17:15:13Z","name":"netology","namespace":"stage","resourceVersion":"276336","uid":"0075c48a-797b-4e68-b6f4-67c240dd3fa1"},"secrets":[{"name":"netology-token-mf2vv"}]}
+  creationTimestamp: "2022-08-11T17:23:03Z"
   name: netology
   namespace: stage
-  resourceVersion: "276336"
-  uid: 0075c48a-797b-4e68-b6f4-67c240dd3fa1
+  resourceVersion: "277483"
+  uid: 265897f8-a3cd-4c0e-a679-16d915b2347f
 secrets:
 - name: netology-token-mf2vv
+- name: netology-token-x7n2t
