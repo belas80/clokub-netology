@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: "2022-08-11T17:15:13Z"
+  name: netology
+  namespace: stage
+  resourceVersion: "276336"
+  uid: 0075c48a-797b-4e68-b6f4-67c240dd3fa1
+secrets:
+- name: netology-token-mf2vv
