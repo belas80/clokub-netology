@@ -23,7 +23,7 @@ uid=1000 gid=3000 groups=3000
 и ко второму контейнеру. Для второго модуля разрешите связь только с
 первым контейнером. Проверьте корректность настроек.  
 
-Запустим поды [fronend](src/pods/frontend.yml), [backend](src/pods/backend.yml) 
+Запустим поды [fronend](src/pods/frontend.yml), [backend](src/pods/backend.yml)  
 Проверим что пинги идут  
 ```shell
 # Узнаем их айпи
@@ -108,7 +108,7 @@ PING 10.233.90.148 (10.233.90.148): 56 data bytes
 command terminated with exit code 1
 ```
 Доступа нет ни у кого никуда.  
-Для модуля `frontend` разрешим доступ в инетернет, без доступа в кластер манифестом [10-frontend-inetaccess.yml](src/network-policy/10-frontend-inetaccess.yml)  
+Для модуля `frontend` разрешим доступ в инетернет, без доступа в кластер, манифестом [10-frontend-inetaccess.yml](src/network-policy/10-frontend-inetaccess.yml)  
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
