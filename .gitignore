@@ -1,2 +1,13 @@
 .idea
 certs/
+
+# Local .terraform directories
+**/.terraform/*
+**/.terraform*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# key files
+key.json
