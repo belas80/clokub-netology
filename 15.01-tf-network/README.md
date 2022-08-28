@@ -95,7 +95,7 @@
 Для удобства, код разбит на разные файлы, названия которых соответсвуют их сути.  
 - provider.tf - установки провайдера Yandex Cloud
 - network.tf - сеть
-- nat-instance.tf (public-instance.tf, private-instace.tf) - виртуальная машина
+- instance-nat.tf (instance-public.tf, instance-private.tf) - виртуальная машина
 - output.tf - вывод информации, IP адреса инстансов, подсети, маршрут  
 
 ### Шаги создания ресурсов  
