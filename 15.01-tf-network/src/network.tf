@@ -6,7 +6,7 @@ resource "yandex_vpc_network" "lab-net" {
 # Route-table
 resource "yandex_vpc_route_table" "lab-rt-a" {
   network_id = yandex_vpc_network.lab-net.id
-  name = "lab-rt-a"
+  name       = "lab-rt-a"
 
   static_route {
     destination_prefix = "0.0.0.0/0"
