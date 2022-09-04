@@ -17,18 +17,20 @@ resource "yandex_iam_service_account_static_access_key" "sa-static-key" {
   description        = "static access key for object storage"
 }
 
+// Create Bucket
 resource "yandex_storage_bucket" "test" {
   depends_on = [yandex_resourcemanager_folder_iam_member.sa-editor, yandex_iam_service_account_static_access_key.sa-static-key]
   access_key = yandex_iam_service_account_static_access_key.sa-static-key.access_key
   secret_key = yandex_iam_service_account_static_access_key.sa-static-key.secret_key
-  bucket     = "belyaev-01092022"
+  bucket     = "belyaev-04092022"
 }
 
+// Create Object with public access
 resource "yandex_storage_object" "test-object" {
   depends_on = [yandex_storage_bucket.test]
   access_key = yandex_iam_service_account_static_access_key.sa-static-key.access_key
   secret_key = yandex_iam_service_account_static_access_key.sa-static-key.secret_key
-  bucket     = "belyaev-01092022"
+  bucket     = "belyaev-04092022"
   key        = "terraform.png"
   source     = "../img/terraform.png"
   acl        = "public-read"

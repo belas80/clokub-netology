@@ -86,4 +86,10 @@ resource "yandex_compute_instance_group" "ig-1" {
   load_balancer {
     target_group_name = "my-target-group-lb"
   }
+
+#  application_load_balancer {
+#    target_group_name        = "target-group-alb"
+#    target_group_description = "application load balancer target group"
+#  }
+
 }
