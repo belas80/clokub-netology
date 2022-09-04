@@ -25,9 +25,19 @@
   Далее прикрепляем эту группу в блоке `attached_target_group` сетевого балансировщика.  
   Результат в файле [balance.tf](src/balancer.tf).  
 4. *Создать Application Load Balancer с использованием Instance group и проверкой состояния.
+  
+   Здесь примерно тоже самое, только для таргет группы, вместо `load_balancer` делаем `application_load_balancer` в группе ВМ [instance-group-alb.tf](src/instance-group-alb.tf).  
+   ```terraform
+   application_load_balancer {
+     target_group_name        = "target-group-alb"
+     target_group_description = "application load balancer target group"
+   }
+   ```
+   Далее нам нужно создать ресурсы `yandex_alb_backend_group`, `yandex_alb_http_router` и сам балансировщик `yandex_alb_load_balancer`. Все три сущности разметил в одном файле [app-balancer.tf](src/app-balancer.tf).  
+   Проверка ALB ниже, после проверки NLB.  
 
 Все исходники находятся [здесь](src).
-Проверяем Network Load Balancer.  
+### Проверяем Network Load Balancer.  
 ```shell
  % terraform apply -auto-approve
 yandex_iam_service_account.sa: Refreshing state... [id=aje9miuilvh4mjqpiopb]
@@ -60,16 +70,37 @@ address_lb = toset([
   },
 ])
 ```
-Смотрим что группа ВМ запустилось.
+Смотрим что группа ВМ запустилось.  
+
 ![](img/check_instance_group.png)
-Смотрим сетевой балансировщик.
-![](img/check_nlb.png)
+Смотрим сетевой балансировщик.  
+
+![](img/check_nlb.png)  
+
 Проверим балансировщик. С помощью `watch` будем каждые 2 секунды обращаться к балансировщику и наблюдать как меняется имя хотса в заголовке, т.е. наш балансировщик распределяет трафик по всем трем хостам.  
+
 ![](img/watch_18.35.39.png)
 ![](img/watch_18.35.46.png)
 ![](img/watch_18.36.01.png)
 Проверим через браузер.
 ![](img/check_web_1.png)
-Остановим один инстанс и проверим открывается ли страница.
+Остановим один инстанс и проверим открывается ли страница.  
+
 ![](img/stop_instance.png)
-![](img/check_web_2.png)
+![](img/check_web_2.png)  
+
+### Проверяем Application Load Balancer  
+Завершение `terraform apply` без ошибок.  
+
+![](img/alb-apply.png)  
+
+Проверим созданные объекты в браузере.
+![](img/alb-targer-group.png)
+![](img/alb-backend.png)
+![](img/alb-router.png)
+![](img/alb-balancer.png)
+Потыкаем в браузере кнопку обновить.  
+![](img/alb-web-1.png)
+![](img/alb-web-2.png)
+![](img/alb-web-3.png)
+В заголовке видно что hostname меняется.  

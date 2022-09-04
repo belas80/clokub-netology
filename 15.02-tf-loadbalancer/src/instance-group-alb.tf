@@ -1,11 +1,11 @@
-resource "yandex_compute_instance_group" "ig-1" {
-  name               = "fixed-ig"
+resource "yandex_compute_instance_group" "ig-2" {
+  name               = "fixed-ig2"
   folder_id          = var.yandex_folder_id
   service_account_id = yandex_iam_service_account.ig-sa.id
   depends_on         = [yandex_resourcemanager_folder_iam_binding.editor, yandex_storage_object.test-object]
   instance_template {
     platform_id = "standard-v3"
-    name        = "my-instance-{instance.index}"
+    name        = "alb-instance-{instance.index}"
     resources {
       memory = 2
       cores  = 2
@@ -23,7 +23,6 @@ resource "yandex_compute_instance_group" "ig-1" {
     network_interface {
       network_id = yandex_vpc_network.lab-net.id
       subnet_ids = ["${yandex_vpc_subnet.public.id}"]
-      nat        = true
     }
 
     metadata = {
@@ -67,8 +66,9 @@ resource "yandex_compute_instance_group" "ig-1" {
     }
   }
 
-  load_balancer {
-    target_group_name = "my-target-group-lb"
+  application_load_balancer {
+    target_group_name        = "target-group-alb"
+    target_group_description = "application load balancer target group"
   }
 
 }
