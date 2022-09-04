@@ -39,11 +39,21 @@ resource "yandex_compute_instance_group" "ig-1" {
     network_interface {
       network_id = yandex_vpc_network.lab-net.id
       subnet_ids = ["${yandex_vpc_subnet.public.id}"]
+      nat        = true
     }
 
     metadata = {
       ssh-keys  = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
-      user-data = "#!/bin/bash\ncd /var/www/html\necho \"<html><h1>My cool web-server `hostname`</h1><img src=\"https://storage.yandexcloud.net/${yandex_storage_object.test-object.bucket}/${yandex_storage_object.test-object.key}\" alt=\"Моя картинка\"></html>\" > index.html"
+      user-data = <<-EOT
+        #!/bin/bash
+        cd /var/www/html
+        cat <<EOF > index.html
+        <html>
+          <h1>My cool web-server $(hostname -f)</h1>
+          <img src="https://storage.yandexcloud.net/${yandex_storage_object.test-object.bucket}/${yandex_storage_object.test-object.key}">
+        </html>
+        EOF
+       EOT
     }
   }
 
