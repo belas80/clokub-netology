@@ -21,12 +21,12 @@
 - Создать сетевой балансировщик;
 - Проверить работоспособность, удалив одну или несколько ВМ.
 
-  Для создания таргет группы используется блок `load_balancer` в манифесте из предыдущего шага [instance-group.tf](src/instance-group.tf).  
+  Для создания таргет группы используется блок `load_balancer` в манифесте из предыдущего шага [instance-group.tf](src/instance-group.tf#L70).  
   Далее прикрепляем эту группу в блоке `attached_target_group` сетевого балансировщика.  
   Результат в файле [balance.tf](src/balancer.tf).  
 4. *Создать Application Load Balancer с использованием Instance group и проверкой состояния.
   
-   Здесь примерно тоже самое, только для таргет группы, вместо `load_balancer` делаем `application_load_balancer` в группе ВМ [instance-group-alb.tf](src/instance-group-alb.tf).  
+   Здесь примерно тоже самое, только для таргет группы, вместо `load_balancer` делаем `application_load_balancer` в группе ВМ [instance-group-alb.tf](src/instance-group-alb.tf#L69). Сделаем отдельную группу ВМ для ALB.  
    ```terraform
    application_load_balancer {
      target_group_name        = "target-group-alb"
