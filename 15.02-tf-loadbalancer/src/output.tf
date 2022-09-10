@@ -3,5 +3,5 @@
 #}
 
 output "address_lb" {
-  value = yandex_lb_network_load_balancer.foo.listener
+  value = yandex_lb_network_load_balancer.foo.listener[*].external_address_spec[*].address
 }
